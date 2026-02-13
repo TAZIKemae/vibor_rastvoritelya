@@ -1,126 +1,122 @@
-<!DOCTYPE html><html lang="ru">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Подбор растворителей для оргтехники</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-    }
-    th, td {
-      padding: 12px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-    th {
-      background: #2c7be5;
-      color: #fff;
-    }
-    tr:hover {
-      background: #f1f1f1;
-    }
-    .filter {
-      margin-bottom: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    select {
-      padding: 8px;
-      font-size: 14px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Выбор растворителей</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  .button-container, .filter-container {
+    margin-bottom: 20px;
+  }
+  button {
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  .info {
+    display: none;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Подбор растворителей для оргтехники</h1><div class="filter">
-  <select id="materialFilter">
-    <option value="">Материал</option>
-    <option value="пластик">Пластик</option>
-    <option value="резина">Резина</option>
-    <option value="металл">Металл</option>
-  </select>
 
-  <select id="riskFilter">
-    <option value="">Опасность</option>
-    <option value="низкая">Низкая</option>
-    <option value="средняя">Средняя</option>
-    <option value="высокая">Высокая</option>
+<h1>Выберите растворитель</h1>
+
+<div class="filter-container">
+  <label>Фильтр по материалу: </label>
+  <select id="materialFilter">
+    <option value="all">Все</option>
+    <option value="пластик">Пластик</option>
+    <option value="металл">Металл</option>
+    <option value="стекло">Стекло</option>
   </select>
 </div>
 
-<table id="solventTable">
-  <thead>
-    <tr>
-      <th>Название</th>
-      <th>Подходит для</th>
-      <th>Назначение</th>
-      <th>Опасность</th>
-      <th>Комментарий</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr data-material="пластик" data-risk="средняя">
-      <td>Изопропиловый спирт</td>
-      <td>Пластик, металл</td>
-      <td>Очистка плат, роликов</td>
-      <td>Средняя</td>
-      <td>Безопасен для электроники</td>
-    </tr>
-    <tr data-material="резина" data-risk="низкая">
-      <td>Этиловый спирт</td>
-      <td>Резина, пластик</td>
-      <td>Удаление загрязнений</td>
-      <td>Низкая</td>
-      <td>Может оставлять налёт</td>
-    </tr>
-    <tr data-material="металл" data-risk="высокая">
-      <td>Ацетон</td>
-      <td>Металл</td>
-      <td>Удаление клея и тонера</td>
-      <td>Высокая</td>
-      <td>Опасен для пластика</td>
-    </tr>
-  </tbody>
-</table>
+<div class="button-container" id="buttonContainer">
+  <!-- Кнопки растворителей будут здесь -->
+</div>
 
-  </div>  <script>
-    const materialFilter = document.getElementById('materialFilter');
-    const riskFilter = document.getElementById('riskFilter');
-    const rows = document.querySelectorAll('#solventTable tbody tr');
+<div class="info" id="infoBox">
+  <h2 id="infoName"></h2>
+  <p><strong>Подходит для материалов:</strong> <span id="infoMaterial"></span></p>
+  <p><strong>Опасность:</strong> <span id="infoHazard"></span></p>
+  <p><strong>Комментарий:</strong> <span id="infoComment"></span></p>
+  <button id="backButton">Назад</button>
+</div>
 
-    function filterTable() {
-      const material = materialFilter.value;
-      const risk = riskFilter.value;
+<script>
+const solvents = [
+  {
+    name: "Изопропиловый спирт",
+    material: ["пластик", "металл", "стекло"],
+    hazard: "Средняя",
+    comment: "Подходит для очистки оргтехники, быстро испаряется, безопасен при правильном использовании"
+  },
+  {
+    name: "Этиловый спирт",
+    material: ["пластик", "металл", "стекло"],
+    hazard: "Средняя",
+    comment: "Хорош для протирки сенсорных экранов и плат, быстро испаряется, не оставляет следов"
+  },
+  {
+    name: "Ацетон",
+    material: ["металл", "стекло"],
+    hazard: "Высокая",
+    comment: "Сильный растворитель, может повредить пластик, использовать осторожно"
+  }
+];
 
-      rows.forEach(row => {
-        const rowMaterial = row.dataset.material;
-        const rowRisk = row.dataset.risk;
+const buttonContainer = document.getElementById("buttonContainer");
+const infoBox = document.getElementById("infoBox");
+const infoName = document.getElementById("infoName");
+const infoHazard = document.getElementById("infoHazard");
+const infoComment = document.getElementById("infoComment");
+const infoMaterial = document.getElementById("infoMaterial");
+const backButton = document.getElementById("backButton");
+const materialFilter = document.getElementById("materialFilter");
 
-        const materialMatch = !material || rowMaterial === material;
-        const riskMatch = !risk || rowRisk === risk;
-
-        row.style.display = materialMatch && riskMatch ? '' : 'none';
-      });
+function showButtons(filter="all") {
+  buttonContainer.innerHTML = "";
+  solvents.forEach(solvent => {
+    if(filter === "all" || solvent.material.includes(filter)) {
+      const btn = document.createElement("button");
+      btn.textContent = solvent.name;
+      btn.addEventListener("click", () => showInfo(solvent));
+      buttonContainer.appendChild(btn);
     }
+  });
+  buttonContainer.style.display = "block";
+  infoBox.style.display = "none";
+}
 
-    materialFilter.addEventListener('change', filterTable);
-    riskFilter.addEventListener('change', filterTable);
-  </script></body>
+function showInfo(solvent) {
+  infoName.textContent = solvent.name;
+  infoHazard.textContent = solvent.hazard;
+  infoComment.textContent = solvent.comment;
+  infoMaterial.textContent = solvent.material.join(", ");
+  buttonContainer.style.display = "none";
+  infoBox.style.display = "block";
+}
 
+backButton.addEventListener("click", () => {
+  showButtons(materialFilter.value);
+});
+
+materialFilter.addEventListener("change", () => {
+  showButtons(materialFilter.value);
+});
+
+// Изначально показываем все кнопки
+showButtons();
+</script>
+
+</body>
 </html>
