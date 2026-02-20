@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Выбор растворителей</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  .button-container, .filter-container {
+    margin-bottom: 20px;
+  }
+  button {
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  .info {
+    display: none;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+  }
+</style>
+</head>
+<body>
+
+<h1>Выбор растворителя для оргтехники</h1>
+
+<div class="filter-container">
+  <label>Фильтр по материалу: </label>
+  <select id="materialFilter">
+    <option value="all">Все</option>
+    <option value="пластик">Пластик</option>
+    <option value="металл">Металл</option>
+    <option value="стекло">Стекло</option>
+  </select>
+</div>
+
+<div class="button-container" id="buttonContainer"></div>
+
+<div class="info" id="infoBox">
+  <h2 id="infoName"></h2>
+  <p><strong>Подходит для материалов:</strong> <span id="infoMaterial"></span></p>
+  <p><strong>Опасность:</strong> <span id="infoHazard"></span></p>
+  <p><strong>Физические свойства:</strong> <span id="infoPhysical"></span></p>
+  <p><strong>Комментарий:</strong> <span id="infoComment"></span></p>
+  <button id="backButton">Назад</button>
+</div>
+
+<script>
+const solvents = [
+  {
+    name: "Изопропиловый спирт",
+    material: ["пластик", "металл", "стекло"],
+    hazard: "Средняя",
+    physical: "Молекулярная формула:C₃H₈O. Структурная формула:CH₃CH(OH)CH₃. Горючая прозрачная летучая жидкость с характерным запахом. Температура кипения:~82 °C, плотность:~0.785 г/см³. Этот спирт хорошо растворяется в воде.",
+    comment: "Подходит для очистки оргтехники, быстро испаряется, безопасен при правильном использовании"
+  },
+  {
+    name: "Этиловый спирт",
+    material: ["пластик", "металл", "стекло"],
+    hazard: "Средняя",
+    physical: "Молекулярная формула:C₂H₆O. Структурная формула:CH₃–CH₂–OH. Горючая прозрачная летучая жидкость. Температура кипения:~78 °C, плотность:~0.789 г/см³, смешивается с водой.",
+    comment: "Хорош для протирки сенсорных экранов и плат, быстро испаряется, не оставляет следов"
+  },
+  {
+    name: "Ацетон",
+    material: ["металл", "стекло"],
+    hazard: "Высокая",
+    physical: "Молекулярная формула:C₃H₆O. Структурная формула:CH₃–C(=O)–CH₃. Это бесцветная высоколетучая жидкость. Температура кипения:~56 °C, плотность:~0.79 г/см³, легко смешивается с водой",
+    comment: "Сильный растворитель, может повредить пластик, использовать осторожно"
+  },
+  {
+    name: "Бутилацетат",
+    material: ["металл", "стекло"],
+    hazard: "Средняя",
+    physical: "Молекулярна формула:C₆H₁₂O₂. Структурная формула:CH₃-COO-CH₂-CH₂-CH₂-CH₃. Бесцветная жидкость с фруктовым запахом. Температура кипения:~126 °C, плотность:~0.88 г/см³, малорастворим в воде, но хорошо растворяет органические материалы",
+    comment: "Используется для удаления лаков и красок, менее агрессивен к некоторым покрытиям"
+  }
+];
+
+const buttonContainer = document.getElementById("buttonContainer");
+const infoBox = document.getElementById("infoBox");
+const infoName = document.getElementById("infoName");
+const infoHazard = document.getElementById("infoHazard");
+const infoComment = document.getElementById("infoComment");
+const infoMaterial = document.getElementById("infoMaterial");
+const infoPhysical = document.getElementById("infoPhysical");
+const backButton = document.getElementById("backButton");
+const materialFilter = document.getElementById("materialFilter");
+
+function showButtons(filter="all") {
+  buttonContainer.innerHTML = "";
+  solvents.forEach(solvent => {
+    if(filter === "all" || solvent.material.includes(filter)) {
+      const btn = document.createElement("button");
+      btn.textContent = solvent.name;
+      btn.addEventListener("click", () => showInfo(solvent));
+      buttonContainer.appendChild(btn);
+    }
+  });
+  buttonContainer.style.display = "block";
+  infoBox.style.display = "none";
+}
+
+function showInfo(solvent) {
+  infoName.textContent = solvent.name;
+  infoHazard.textContent = solvent.hazard;
+  infoComment.textContent = solvent.comment;
+  infoMaterial.textContent = solvent.material.join(", ");
+  infoPhysical.textContent = solvent.physical;
+
+  buttonContainer.style.display = "none";
+  infoBox.style.display = "block";
+}
+
+backButton.addEventListener("click", () => {
+  showButtons(materialFilter.value);
+});
+
+materialFilter.addEventListener("change", () => {
+  showButtons(materialFilter.value);
+});
+
+// старт
+showButtons();
+</script>
+  </body>
+</html>
